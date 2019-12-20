@@ -1,0 +1,22 @@
+{
+  "name": "weather-journal-demo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "start": "nodemon server.js localhost 8000"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shajun/weather-journal-demo.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/shajun/weather-journal-demo/issues"
+  },
+  "homepage": "https://github.com/shajun/weather-journal-demo#readme",
+  "devDependencies": {
+    "nodemon": "^2.0.2"
+  }
+}
