@@ -24,7 +24,7 @@ function performAction(e) {
       feelings: feelings
     });
 
-    // updateUI();
+    updateUI();
   });
 }
 
@@ -60,5 +60,18 @@ const postData = async (url = '', data = {}) => {
     return newData;
   } catch (error) {
     console.log('error1', error);
+  }
+};
+
+const updateUI = async () => {
+  const request = await fetch('/all');
+  try {
+    const allData = await request.json();
+    console.log('allData', allData);
+    document.getElementById('date').innerHTML = allData.date;
+    document.getElementById('temp').innerHTML = allData.temperature;
+    document.getElementById('content').innerHTML = allData.userResponse;
+  } catch (error) {
+    console.log('error2', error);
   }
 };
