@@ -28,3 +28,21 @@ function listening() {
   console.log('Server is running!');
   console.log(`running on localhost: ${port}`);
 }
+
+// GET ROUTE
+app.get('/all', getData);
+
+function getData(req, res) {
+  res.send(projectData);
+}
+
+// POST ROUTE
+app.post('/addData', addData);
+
+function addData(req, res) {
+  projectData.temperature = req.body.temp;
+  projectData.date = req.body.date;
+  projectData.userResponse = req.body.feelings;
+  console.log(projectData);
+  res.send(projectData);
+}
