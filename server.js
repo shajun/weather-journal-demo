@@ -40,9 +40,15 @@ function getData(req, res) {
 app.post('/addData', addData);
 
 function addData(req, res) {
-  projectData.temperature = req.body.temp;
-  projectData.date = req.body.date;
-  projectData.userResponse = req.body.feelings;
+  // console.log(request.body)
+  let data = req.body;
+
+  // Create new entry for JS Object Endpoint
+  projectData.temp = data.temp;
+  projectData.date = data.date;
+  projectData.feelings = data.feelings;
+
+  // Send response to Endpoint
   console.log(projectData);
   res.send(projectData);
 }

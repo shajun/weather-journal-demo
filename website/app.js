@@ -1,38 +1,42 @@
-/* Global Variables */
+// OpenWeatherMap Base URL
 let baseURL = 'https://api.openweathermap.org/data/2.5/weather?zip=';
-let apiKey = '&appid=1ff87d35f10101299bc6fcf5d2318b15';
-
-// Create a new date instance dynamically with JS
-let d = new Date();
-let newDate = d.getMonth() + '.' + d.getDate() + '.' + d.getFullYear();
+// Personal API Key for OpenWeatherMap API
+let apiKey = '&appid=1ff87d35f10101299bc6fcf5d2318b15&units=imperial';
 
 // Click Event Listener
 document.getElementById('generate').addEventListener('click', performAction);
 
 function performAction(e) {
-  // Zip Value
-  const newZip = document.getElementById('zip').value;
-  // User Response Value - feelings
+  // Create a new date instance dynamically with JS
+  let d = new Date();
+  let currentDate = d.toDateString();
+
+  // Get user zip code
+  const userZip = document.getElementById('zip').value;
+
+  // Get user response value - feelings
   const feelings = document.getElementById('feelings').value;
 
-  getWeatherData(baseURL, newZip, apiKey).then(function(apiData) {
-    // Add data
-    console.log('Catch you', apiData);
+  // Get weather data from OpenWeatherMap API
+  getWeatherData(baseURL, userZip, apiKey).then(function(apiData) {
+    // console.log('Received data', apiData);
+
+    // Add data to endpoint
     postData('/addData', {
       temp: apiData['main']['temp'],
-      date: newDate,
+      date: currentDate,
       feelings: feelings
     });
-
+    // update UI
     updateUI();
   });
 }
 
 // TODO-Async GET
-const getWeatherData = async (baseURL, zip, key) => {
-  const request = await fetch(baseURL + zip + key);
+const getWeatherData = async (baseURL, userZip, apiKey) => {
+  const request = await fetch(baseURL + userZip + apiKey);
   try {
-    // Transform into JSON
+    // transform into JSON
     const apiData = await request.json();
     console.log('getWeatherData', apiData);
     return apiData;
@@ -42,9 +46,23 @@ const getWeatherData = async (baseURL, zip, key) => {
   }
 };
 
-/* POST EXAMPLE */
+// Update UI
+const updateUI = async () => {
+  const request = await fetch('/all');
+  try {
+    const allData = await request.json();
+    console.log('allData for updata UI', allData);
+    document.getElementById('date').innerHTML = allData.date;
+    document.getElementById('temp').innerHTML = allData.temp;
+    document.getElementById('content').innerHTML = allData.feelings;
+  } catch (error) {
+    console.log('error', error);
+    // appropriately handle the error
+  }
+};
+
+// TODO-Async POST
 const postData = async (url = '', data = {}) => {
-  // console.log(data)
   const response = await fetch(url, {
     method: 'POST', // *GET, POST, DELETE, etc.
     credentials: 'same-origin', // include, *same-origin, omit
@@ -56,22 +74,10 @@ const postData = async (url = '', data = {}) => {
 
   try {
     const newData = await response.json();
-    console.log('newData', newData);
+    console.log('postData', newData);
     return newData;
   } catch (error) {
-    console.log('error1', error);
-  }
-};
-
-const updateUI = async () => {
-  const request = await fetch('/all');
-  try {
-    const allData = await request.json();
-    console.log('allData', allData);
-    document.getElementById('date').innerHTML = allData.date;
-    document.getElementById('temp').innerHTML = allData.temperature;
-    document.getElementById('content').innerHTML = allData.userResponse;
-  } catch (error) {
-    console.log('error2', error);
+    console.log('error', error);
+    // appropriately handle the error
   }
 };
